@@ -1,1 +1,1 @@
-# adaca-api
+# event-scheduler-api
