@@ -26,3 +26,18 @@ jobs:
       # Step 4: Build Docker image
       - name: Build Docker image
         run: docker build -t event-scheduler-api:latest .
+
+      # Step 5: Deploy to GCP VM
+      - name: Deploy to GCP VM
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.GCP_VM_IP }}
+          username: ${{ secrets.GCP_VM_USER }}
+          key: ${{ secrets.GCP_VM_SSH_KEY }}
+          script: |
+            docker stop event-scheduler-api || true
+            docker rm event-scheduler-api || true
+            docker rmi event-scheduler-api:latest || true
+            docker pull your-dockerhub-username/event-scheduler-api:latest || true
+            docker build -t event-scheduler-api:latest /home/ubuntu/event-scheduler-api
+            docker compose -f /home/ubuntu/event-scheduler-api/docker-compose.yml up -d
