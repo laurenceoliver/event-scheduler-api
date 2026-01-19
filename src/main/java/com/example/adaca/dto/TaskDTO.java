@@ -19,7 +19,7 @@ public class TaskDTO {
     private int developerId;
     private int projectId;
     @Builder.Default
-    private int testId = 107;
+    private int testId = 104;
 
     public Task toTask() {
         return Task.builder()
