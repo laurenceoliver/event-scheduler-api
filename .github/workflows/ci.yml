@@ -42,3 +42,4 @@ jobs:
             docker build -t event-scheduler-api:latest /home/ubuntu/event-scheduler-api
             docker compose -f /home/ubuntu/event-scheduler-api/docker-compose.yml up -d
             
+            
