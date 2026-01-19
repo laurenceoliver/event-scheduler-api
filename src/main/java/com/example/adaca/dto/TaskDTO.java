@@ -18,6 +18,8 @@ public class TaskDTO {
     private int statusId;
     private int developerId;
     private int projectId;
+    @Builder.Default
+    private int testId = 107;
 
     public Task toTask() {
         return Task.builder()
