@@ -1,14 +1,16 @@
-# Use Java 17 runtime base image
-FROM eclipse-temurin:21-jre
+# Stage 1: build
+FROM maven:3.9.12-eclipse-temurin-21 AS build
 
-# Set working directory
 WORKDIR /app
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy the built JAR into the container
-COPY target/*.jar app.jar
+# Stage 2: runtime
+FROM eclipse-temurin:21-jdk
 
-# Expose the default Spring Boot port
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]

@@ -1,47 +1,28 @@
-name: Spring Boot CI
+name: Event Scheduler CI
 
-# Trigger workflow
 on:
   push:
-    branches: [ master ]      # now triggers on pushes to master
-  pull_request:
-    branches: [ master ]      # now triggers on PRs targeting master
+    branches: [ master ]
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out your repo
+      # Step 1: checkout
       - uses: actions/checkout@v3
 
-      # Step 2: Set up Java
+      # Step 2: Set up JDK
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 21
 
-      # Step 3: Cache Maven dependencies
-      - name: Cache Maven
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      # Step 4: Build Spring Boot JAR
-      - name: Build with Maven
+      # Step 3: Build Spring Boot JAR
+      - name: Build JAR
         run: mvn clean package -DskipTests
 
-      # Step 5: (Optional) Run tests
-      - name: Run tests
-        run: mvn test
-
-      # Step 6: (Optional) Upload JAR artifact
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: springboot-jar
-          path: target/*.jar
+      # Step 4: Build Docker image
+      - name: Build Docker image
+        run: docker build -t event-scheduler-api:latest .
