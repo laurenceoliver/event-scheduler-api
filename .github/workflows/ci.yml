@@ -38,7 +38,7 @@ jobs:
             docker stop event-scheduler-api || true
             docker rm event-scheduler-api || true
             docker rmi event-scheduler-api:latest || true
-            docker pull laurence/event-scheduler-api:latest || true
-            docker build -t event-scheduler-api:latest /home/laurence/event-scheduler-api
-            docker compose -f /home/laurence/event-scheduler-api/docker-compose.yml up -d
+            docker pull laurenceoliverhernandez/event-scheduler-api:latest || true
+            docker build -t event-scheduler-api:latest /home/laurenceoliverhernandez/event-scheduler-api
+            docker compose -f /home/laurenceoliverhernandez/event-scheduler-api/docker-compose.yml up -d
             
