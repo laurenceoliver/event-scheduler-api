@@ -1,5 +1,6 @@
 INSERT INTO project (project_name) VALUES ('Project A');
 INSERT INTO project (project_name) VALUES ('Project B');
+INSERT INTO project (project_name) VALUES ('Project C');
 
 INSERT INTO developer (developer_name, email) VALUES ('Alice Johnson', 'alice.johnson@example.com');
 INSERT INTO developer (developer_name, email) VALUES ('Ben Martinez', 'ben.martinez@example.com');
