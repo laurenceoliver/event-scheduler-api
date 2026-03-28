@@ -5,20 +5,25 @@ on:
     branches: [ master ]
 
 jobs:
-  build-deploy:
+  test:
     runs-on: ubuntu-latest
     steps:
-      # Step 1: checkout
-      - uses: actions/checkout@v3
-      # Step 2: Set up JDK
+      - uses: actions/checkout@v4
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
-      # Step 3: Deploy to GCP VM
+          cache: maven
+      - name: Run tests
+        run: ./mvnw test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
       - name: Deploy to GCP VM
-        uses: appleboy/ssh-action@v0.1.6
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.GCP_VM_IP }}
           username: ${{ secrets.GCP_VM_USER }}
@@ -30,8 +35,7 @@ jobs:
             fi
             cd /home/laurenceoliverhernandez/event-scheduler-api
             git pull origin master
-            docker stop event-scheduler-api || true
-            docker rm event-scheduler-api || true
-            docker rmi event-scheduler-api:latest || true
+            docker stop event-scheduler-api 2>/dev/null || true
+            docker rm event-scheduler-api 2>/dev/null || true
             docker build -t event-scheduler-api:latest .
             docker compose up -d
